@@ -59,16 +59,18 @@ class Gui:
 			fetched_successfully = False
 			
 			if self.fetch_pokemon(query) == -1:
-				fetched_successfully = False
+				fetched_successfully = False 
 			else:
 				fetched_successfully = True
-				self.show_infobox()
-				return
 
 			pokemon = self.db.check_data(query)
-			
+
 			if fetched_successfully:
-				self.update_pokemon_info(pokemon)
+				if pokemon is not None:
+					self.update_pokemon_info(pokemon)
+				else:
+					self.show_infobox()
+					return
 			else:
 				self.show_infobox()
 
