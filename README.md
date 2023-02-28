@@ -28,3 +28,6 @@ to discuss what you would like to change.
 
 ## License
 [GPLv3](https://choosealicense.com/licenses/gpl-3.0/)
+
+## Disclaimer
+Pokémon, Pokémon character names, sprites and designs are trademarks of Nintendo. This project is for non-commercial and educational purposes. 
