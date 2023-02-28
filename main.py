@@ -12,3 +12,4 @@ if __name__ == '__main__':
 	root = tk.Tk()
 	app = Gui(root, api, db)
 	root.mainloop()
+	
