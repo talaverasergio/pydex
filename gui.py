@@ -62,6 +62,8 @@ class Gui:
 				fetched_successfully = False
 			else:
 				fetched_successfully = True
+				self.show_infobox()
+				return
 
 			pokemon = self.db.check_data(query)
 			
