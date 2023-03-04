@@ -8,7 +8,7 @@ API_URL: str = 'https://pokeapi.co/api/v2/pokemon/'
 
 if __name__ == '__main__':
 	api = PokeAPI(API_URL)
-	db = PokeDatabase()
+	db = PokeDatabase(api)
 	root = tk.Tk()
 	app = Gui(root, api, db)
 	root.mainloop()

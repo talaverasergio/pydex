@@ -30,3 +30,6 @@ class PokeAPI:
 		else:
 			return json.load(response)
 
+	def get_image(self, url):
+		return urllib.request.urlopen(url).read()
+

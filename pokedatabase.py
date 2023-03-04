@@ -1,14 +1,14 @@
 
 # Class for storing Pokemon() instances in a database
 import shelve
-import urllib.request
 from pokemon import Pokemon
 
 class PokeDatabase:
 
-	def __init__(self):
+	def __init__(self, api):
 		self._db = shelve.open('data/db')
 		self._db_nameID = {}
+		self._api = api
 		for pokemon in self._db.values():
 			self._db_nameID[pokemon.name] = str(pokemon.pokeid)
 
@@ -27,7 +27,7 @@ class PokeDatabase:
 	def save_image(self, url, pokeid):
 		path = 'data/img/' + str(pokeid) + '.png'
 		with open(path, 'wb') as f:
-			f.write(urllib.request.urlopen(url).read())
+			f.write(self._api.get_image(url))
 		return path
 
 	def check_data(self, query):
