@@ -9,13 +9,19 @@ Construido usando Tkinter y urllib
 ![Screenshot](docs/screenshots/1.png)
 
 ## Installation
-Install the dependencies:
+First, clone this repository:
 
 ```bash
-pip install pillow
+git clone https://github.com/talaverasergio/pydex.git
 
 ```
-Clone this repository and run:
+Then go to the project folder and install the dependencies:
+
+```bash
+pip install -r requirements.txt
+
+```
+Finally launch the app:
 
 ```bash
 python3 main.py
