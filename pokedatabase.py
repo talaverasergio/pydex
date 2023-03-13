@@ -51,5 +51,8 @@ class PokeDatabase:
 		else:
 			return pokemon
 
+	def close(self):
+		self._db.close()
+
 
 
