@@ -2,9 +2,7 @@ import tkinter as tk
 import tkinter.messagebox as tkmsg
 from tkinter import StringVar, ttk
 from PIL import ImageTk, Image
-
-from pokedatabase import PokeDatabase
-from pokeapi import PokeAPI
+from pokeapi import AsyncDownload
 
 class Gui:
 
@@ -12,12 +10,15 @@ class Gui:
 		
 		self.db = db
 		self.api = api
+		self.root = root
 		root.title("PyDex")
 		self.icon = ImageTk.PhotoImage(Image.open('assets/icon.png'))
 		root.wm_iconphoto(False, self.icon)
 		self.splash = ImageTk.PhotoImage(Image.open('assets/splash.png'))
 		self.label_splash = tk.Label(image=self.splash)
 		self.label_splash.grid(column=1, row=2)
+
+		self.download_thread = None
 
 		self.mainframe = ttk.Frame(root)
 		self.mainframe.grid(column=0, row=0)
@@ -48,41 +49,39 @@ class Gui:
 
 	def search_button(self):
 		query = self.query_input.get().lower()
-		pokemon = self.db.check_data(query)
-
+		
 		if query == '':
 			return
-
+	
+		self.button_load_query.configure(text='Buscando...')
+		self.button_load_query.configure(state=tk.DISABLED)
+		self.entry_name_id_pokemon.configure(state=tk.DISABLED)
+		pokemon = self.db.check_data(query)
+	
 		if(pokemon is not None):
 			self.update_pokemon_info(pokemon)
+			self.button_load_query.configure(text='Buscar')
+			self.button_load_query.configure(state=tk.NORMAL)
+			self.entry_name_id_pokemon.configure(state=tk.NORMAL)
 		else:
-			fetched_successfully = False
+			self.fetch_pokemon(query)
 			
-			if self.fetch_pokemon(query) == -1:
-				fetched_successfully = False 
-			else:
-				fetched_successfully = True
-
-			pokemon = self.db.check_data(query)
-
-			if fetched_successfully:
-				if pokemon is not None:
-					self.update_pokemon_info(pokemon)
-				else:
-					self.show_infobox()
-					return
-			else:
-				self.show_infobox()
-
-
 	def fetch_pokemon(self, query):
-		req = self.api.generate_request(query)
-		res = self.api.make_response(req)
-		if res == -1:
-			return False
-		else:
-			data = self.api.get_data(res)
-			self.db.save_data(data)
+		self.download_thread = AsyncDownload(query,self.api)
+		self.download_thread.start()
+		self.api.monitor_thread(self.download_thread, self)
+
+	def fetch_complete(self):
+		self.button_load_query.configure(text='Buscar')
+		self.button_load_query.configure(state=tk.NORMAL)
+		self.entry_name_id_pokemon.configure(state=tk.NORMAL)
+		
+		if self.download_thread.status == -1:
+			self.show_infobox()
+
+		if self.download_thread.status == 2:
+			pokemon = self.db.save_data(self.api.get_data(self.download_thread.response))
+			self.update_pokemon_info(pokemon)
 
 	def update_pokemon_info(self, pokemon):
 		self.label_pokemon_name.configure(text = pokemon.name.capitalize())
@@ -100,7 +99,7 @@ class Gui:
 
 		tkmsg.showinfo(
 			'Pokémon no encontrado', 
-			('No se ha encontrado el Pokémon especificado.'
+			('No se ha encontrado el Pokémon especificado. '
 			'Compruebe que el ID o el nombre sea correcto. ' 
 			'Tenga en cuenta tambien de poner el nombre completo.'))
 

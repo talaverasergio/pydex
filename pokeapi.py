@@ -3,6 +3,7 @@
 import urllib.request
 from urllib.error import HTTPError
 import json 
+from threading import Thread
 
 class PokeAPI:
 
@@ -32,4 +33,37 @@ class PokeAPI:
 
 	def get_image(self, url):
 		return urllib.request.urlopen(url).read()
+
+	def monitor_thread(self, thread, gui):
+		if thread.is_alive():
+			gui.root.after(100, lambda: self.monitor_thread(thread,gui))
+		else:
+			gui.fetch_complete()
+
+class AsyncDownload(Thread):
+	def __init__(self, query, api):
+			
+		super().__init__()
+
+		self.query = query
+		self.api = api
+		self.response = None
+		self.request = self.api.generate_request(self.query)
+
+		# 0 not processed / 1 In progress / 2 Done / -1 Failure
+		self.status = 0
+
+	def run(self):
+		self.status = 1
+		self.response = self.api.make_response(self.request)
+		
+		if self.response == -1:
+			self.status = -1
+			self.response = -1
+			return 
+		else:
+			self.status = 2
+			return
+
+
 

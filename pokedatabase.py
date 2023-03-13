@@ -24,6 +24,8 @@ class PokeDatabase:
 		self._db_nameID[pokemon.name] = str(pokemon.pokeid)
 		self._db[str(pokemon.pokeid)] = pokemon
 
+		return pokemon
+
 	def save_image(self, url, pokeid):
 		path = 'data/img/' + str(pokeid) + '.png'
 		with open(path, 'wb') as f:
