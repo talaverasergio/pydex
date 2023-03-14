@@ -30,6 +30,7 @@ class Gui:
 
 		self.entry_name_id_pokemon = ttk.Entry(width=20, textvariable=self.query_input, takefocus=1)
 		self.entry_name_id_pokemon.grid(column=2, row=1)
+		self.entry_name_id_pokemon.bind('<Return>', lambda e: self.search_button())
 
 		self.button_load_query = ttk.Button(text='Buscar', command=self.search_button)
 		self.button_load_query.grid(column= 3, row=1, padx=10)
