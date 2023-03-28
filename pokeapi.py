@@ -6,6 +6,9 @@ import json
 from threading import Thread
 
 class PokeAPI:
+	'''
+	Used to communicate with the API using urllib requests
+	'''
 
 	def __init__(self, url):
 		self._url = url
@@ -35,12 +38,23 @@ class PokeAPI:
 		return urllib.request.urlopen(url).read()
 
 	def monitor_thread(self, thread, gui):
+		'''
+		The gui parameter can be use to invoke the correspondent callback method
+		to be called for update the correspondent elements
+		'''
 		if thread.is_alive():
 			gui.root.after(100, lambda: self.monitor_thread(thread,gui))
 		else:
 			gui.fetch_complete()
 
 class AsyncDownload(Thread):
+	'''
+	Provides an asynchronous download for to not block the gui main loop
+	
+	The status property can be used to check the current state of operation
+	as follows:
+	0 not processed / 1 In progress / 2 Done / -1 Failure
+	'''
 	def __init__(self, query, api):
 			
 		super().__init__()
@@ -50,7 +64,7 @@ class AsyncDownload(Thread):
 		self.response = None
 		self.request = self.api.generate_request(self.query)
 
-		# 0 not processed / 1 In progress / 2 Done / -1 Failure
+		
 		self.status = 0
 
 	def run(self):

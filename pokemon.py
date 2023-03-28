@@ -1,7 +1,9 @@
 
-# Class for representing a Pokemon
-class Pokemon:
 
+class Pokemon:
+	'''
+	Represents the information of the Pokemon, like its name and ID
+	'''
 	def __init__(self):
 		self._name = None
 		self._pokeid = None

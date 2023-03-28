@@ -5,7 +5,11 @@ from PIL import ImageTk, Image
 from pokeapi import AsyncDownload
 
 class Gui:
-
+	'''
+	The program main GUI Interface.
+	This class needs the current Tk() instance, an PokeAPI() object to make the requests
+	and a PokeDatabase() object to store those
+	'''
 	def __init__(self, root, api, db):
 		
 		self.db = db

@@ -1,10 +1,12 @@
 
-# Class for storing Pokemon() instances in a database
 import shelve
 from pokemon import Pokemon
 
 class PokeDatabase:
-
+	'''
+	This class is used to store class Pokemon instances into shelve, a python library
+	that provides a dictionary-like interface to store persistent data
+	'''
 	def __init__(self, api):
 		self._db = shelve.open('data/db')
 		self._db_nameID = {}
